@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8">
+		<title>Ajax_회원가입 ID 중복체크</title>
+		<style>
+			div#wrap {	width: 460px;	padding: 10px;	border: 3px solid #aaa;
+						border-radius: 6px;	margin: 20px auto;   }
+			#wrap h1 {	color: #08f;  }
+			form#idChkForm>div {	margin: 10px;	}
+			form#idChkForm input {	width: 160px;	font-size: 20px;	padding: 4px 14px;	}
+			button {	font-size: 16px;	padding: 4px 14px;	cursor: pointer;	}
+		</style>
+	</head>
+	<body>
+		<div id="wrap">
+			<h1>JSP Ajax - 회원중복 체크</h1>		
+			<form id="idChkForm">			
+        			<div id="idInputArea">
+        				<input type="text" id="memId" placeholder="아이디 입력" autofocus>
+        				<button type="button" id="idChk">중복확인</button>
+        				<span id="chkMsg"></span>
+        			</div>
+        			<div id="pwInputArea">
+        				<input type="password" id="memPw" placeholder="비밀번호 입력">
+        			</div>
+			</form>	<!-- form#idChkForm -->		
+		</div>	<!-- div#wrap -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+		<script>
+			$(function(){	
+				$("button#idChk").click(function(){
+					let chkId = $("#memId").val().trim();
+					if (chkId == "") {
+						alert("아이디를 입력하세요.");
+						$("#memId").focus();
+					} else {
+
+						$.ajax({
+							type: "get",
+							url: "/member/joinIdChk.jsp",
+							data: {"userId" : chkId},
+							dataType: "html",
+							async: true,
+							success: function(data) {
+								console.log(data);
+								// 클라이언트에서 처리할 코드 영역
+								if (parseInt(data) == 1) {
+									$("#chkMsg").html("<b>사용 중 ID.</b>");
+								} else {
+									$("#chkMsg").html("<b>사용 가능.</b>");
+								}
+							},
+							error: function() { console.log("비동기 통신 실패"); }
+						});  //  End of $.ajax
+
+					}   // End if
+				});
+			});   
+		</script>
+	</body>
+</html>
